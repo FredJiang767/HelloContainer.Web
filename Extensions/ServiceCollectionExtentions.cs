@@ -9,14 +9,14 @@ namespace HelloContainer.WebApp.Extensions
         public static IServiceCollection ConfigureApiService(this IServiceCollection services, IConfiguration configuration)
         {
             var apiOptions = configuration.GetSection("ApiInfo").Get<ApiOptions>()!;
-            
+
             AddHttpClient<ContainerApiClient>(services, apiOptions.ContainerApiBaseUri!);
             AddHttpClient<UserApiClient>(services, apiOptions.UserApiBaseUri!);
 
             return services;
         }
 
-        private static void AddHttpClient<TClient>(IServiceCollection services, string baseUri) 
+        private static void AddHttpClient<TClient>(IServiceCollection services, string baseUri)
             where TClient : class
         {
             services.AddHttpClient<TClient>(c => c.BaseAddress = new Uri(baseUri))
@@ -25,7 +25,7 @@ namespace HelloContainer.WebApp.Extensions
 
         public static IServiceCollection AddContainerIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOidc(o => configuration.Bind("Oidc", o));
+            services.AddMicrosoftIdentity(configuration);
             return services;
         }
     }

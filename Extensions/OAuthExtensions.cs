@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web;
 
 namespace HelloContainer.WebApp.Extensions
 {
@@ -36,6 +37,13 @@ namespace HelloContainer.WebApp.Extensions
                 }
                 o.SaveTokens = true;
             });
+        }
+
+        public static IServiceCollection AddMicrosoftIdentity(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureAd"));
+            return services;
         }
     }
 }

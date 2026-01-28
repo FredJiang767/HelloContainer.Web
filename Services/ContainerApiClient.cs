@@ -12,6 +12,8 @@ public class ContainerApiClient
         _httpClient = httpClient;
     }
 
+    private readonly string _baseApiUrl = "api/containers";
+
     public async Task<List<ContainerDto>?> GetContainersAsync(string? searchKeyword = null)
     {
         var url = "api/containers";
@@ -25,36 +27,36 @@ public class ContainerApiClient
 
     public async Task<ContainerDto?> GetContainerByIdAsync(Guid id)
     {
-        return await _httpClient.GetAsync<ContainerDto>($"api/containers/{id}");
+        return await _httpClient.GetAsync<ContainerDto>($"{_baseApiUrl}/{id}");
     }
 
     public async Task<ContainerDto?> CreateContainerAsync(CreateContainerDto createDto)
     {
-        return await _httpClient.PostAsync<CreateContainerDto, ContainerDto>($"api/containers", createDto);
+        return await _httpClient.PostAsync<CreateContainerDto, ContainerDto>(_baseApiUrl, createDto);
     }
 
     public async Task<ContainerDto?> AddWaterAsync(Guid id, double amount)
     {
         var addWaterDto = new AddWaterDto(id, amount);
-        return await _httpClient.PostAsync<AddWaterDto, ContainerDto>($"api/containers/{id}/water", addWaterDto);
+        return await _httpClient.PostAsync<AddWaterDto, ContainerDto>($"{_baseApiUrl}/{id}/water", addWaterDto);
     }
 
     public async Task<bool> DeleteContainerAsync(Guid id)
     {
-        var response = await _httpClient.DeleteAsync($"api/containers/{id}");
+        var response = await _httpClient.DeleteAsync($"{_baseApiUrl}/{id}");
         return response.IsSuccessStatusCode;
     }
 
     public async Task ConnectContainersAsync(Guid sourceId, Guid targetId)
     {
         var connectDto = new ConnectContainersDto(sourceId, targetId);
-        await _httpClient.PostAsync("api/containers/connections", connectDto);
+        await _httpClient.PostAsync($"{_baseApiUrl}/connections", connectDto);
     }
 
     public async Task DisconnectContainersAsync(Guid sourceId, Guid targetId)
     {
         var disconnectDto = new DisconnectContainersDto(sourceId, targetId);
-        await _httpClient.PostAsync("api/containers/disconnections", disconnectDto);
+        await _httpClient.PostAsync($"{_baseApiUrl}/disconnections", disconnectDto);
     }
 }
 
